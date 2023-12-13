@@ -1,0 +1,16 @@
+header.container-fluid.text-bg-dark.fixed-top
+        section.container.navbar
+            .logo 
+                span.navbar-brand.fw-bolder.text-light welcome #{login.user.name.split(' ')[0]}
+            main
+                nav.navbar-nav
+                    ul.nav.d-flex.align-items-center
+                        li.nav-item
+                            a.nav-link.text-light(href="/") Home
+                        li.nav-item
+                            a.nav-link.text-light(href="/About") About
+                        li.nav-item
+                            a.nav-link.text-light(href="/Contact") Contact
+                        li.nav-item
+                            a.btn-sm.btn.btn-danger.text-light(href="/logout") logout
+.mt-4.text-dark.w-100.h100 . 

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+    html(lang ='en')
+        head  
+            meta(charset="UTF-8")
+            meta(name="viewport", content="width=device-width,initial-scale=1")
+            link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN", crossorigin="anonymous")
+            script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js", integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL", crossorigin="anonymous")
+            title Home Page
+            link(rel="stylesheet", type='text/css' href="css/style.css")
+body
+include Navbar.pug
+.container.mt-5
+    .section(style='height:100%').d-flex.justify-content-center.align-items-center
+        .row.d-flex.align-items-center.justify-content-center.p-4 
+            .main.col-lg-4.col-12.p-4.rounded-2.text-bg-dark.shadow
+                .title.mb-4.text-center 
+                    span.h2 Contact Us                 
+                form
+                    .mb-4
+                        
+                        label.form-label(for="email") Email
+                        input.form-control#email.mb-2(type="email")
+                        label.form-label(for="address") Address
+                        textarea(name="", cols="50", rows="8").form-control#address.mb-2(type="textarea")
+                    button.btn.w-100.btn-success(type="submit") Contact Us
+            div.images.col-lg-6.col-12.d-none.d-lg-block
+                img(src="https://cdn.dribbble.com/users/2317423/screenshots/14013635/media/60c5f38a3ba265a8112e236e43bc1e35.jpg?resize=700x0", width="110%" alt="login image" )
+
+
+
+
+
+
+
+
+
