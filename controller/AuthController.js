@@ -1,3 +1,4 @@
+const { response } = require("express");
 const Users = require("../models/auth.schema");
 const productModel = require("../models/product.schema");
 require("express-session");
@@ -92,7 +93,6 @@ const AuthControler = {
         { password: 0 }
       );
       if (user) {
-        req.session.message = "login sucessfull";
         req.session.login = { user };
         res.redirect("/");
       } else {
@@ -104,11 +104,17 @@ const AuthControler = {
       res.redirect("/login");
     }
   },
-  // ! savve new product
+  // ! save new product
   async saveNewProduct(req, res) {
-    let { name, Qty, price, mfgDate } = req.body;
+    let { name, Qty, price, mfgDate, id } = req.body;
     try {
-      const product = await productModel({ name, Qty, price, mfgDate });
+      const product = await productModel({
+        name,
+        Qty,
+        price,
+        mfgDate,
+        id,
+      });
 
       const productSucess = await product.save();
       if (productSucess) {
@@ -123,10 +129,19 @@ const AuthControler = {
   // ? get product form backend to user
   async getProduct(req, res) {
     try {
-      const product = await productModel.find();
-      res.json({ status: true, result: product });
+      if (req.session.login !== undefined) {
+        const product = await productModel.find({
+          id: req.session.login.user._id,
+        });
+        res.json({ status: true, result: product });
+      } else {
+        response.status(401).json({
+          status: false,
+          message: "Sessiion is expire re-login again",
+        });
+      }
     } catch (error) {
-      error.message = "backend error";
+      error.message = "server error ,try again";
     }
   },
 

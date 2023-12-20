@@ -1,20 +1,67 @@
 window.addEventListener("load", function () {
   // store data in list
   let list = [];
+  const SaveProduct = document.querySelector("#saveNewProduct");
+  SaveProduct.addEventListener("click", async function () {
+    let neWProduct = {
+      name: document.querySelector("#ProductName").value,
+      Qty: document.querySelector("#productOuantity").value,
+      price: document.querySelector("#ProductPrice").value,
+      mfgDate: document.querySelector("#ProductDate").value,
+      id: id,
+    };
+    try {
+      const Options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(neWProduct),
+      };
+      const URL = "http://localhost:3031/api/saveNewproduct";
+      const res = await fetch(URL, Options);
+      let data = await res.json();
+      if (data.status === true) {
+        const isAddNew = confirm(
+          data.message + " do you want to add new product"
+        );
+        if (isAddNew) {
+          document.querySelector("#ProductName").value =
+            document.querySelector("#productOuantity").value =
+            document.querySelector("#ProductPrice").value =
+            document.querySelector("#ProductDate").value =
+              "";
+        } else {
+          window.location.reload();
+        }
+      } else {
+        alert(data.message);
+      }
+      getAllData();
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
   // ! get all product data form api
   async function getAllData() {
-    const data = await fetch("http://localhost:3031/api/getProduct", {
-      method: "GET",
-    });
-    const product = await data.json();
-
-    // check status of product
-    if (product.status === true) {
-      list = product.result;
-      printData(list);
-    } else {
-      console.log(error.message);
+    try {
+      const data = await fetch("http://localhost:3031/api/getProduct", {
+        method: "GET",
+      });
+      let product = await data.json();
+      // check status of product
+      if (product.status === true) {
+        list = product.result;
+        printData(list);
+      } else {
+        console.log(product.message);
+        window.location.reload();
+      }
+    } catch (error) {
+      alert(product.message);
+      console.log(product.message);
     }
   }
 
@@ -68,5 +115,6 @@ window.addEventListener("load", function () {
     }
   }
   // ! call the data function
+
   getAllData();
 });

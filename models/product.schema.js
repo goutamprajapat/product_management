@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, default: mongoose } = require("mongoose");
 
 // creat a product schema for the given model
 const userschema = new Schema({
@@ -6,6 +6,7 @@ const userschema = new Schema({
   Qty: { type: Number },
   price: { type: Number },
   mfgDate: { type: String },
+  id: { type: mongoose.Schema.Types.ObjectId },
 });
 
 const productModel = model("product", userschema, "products");

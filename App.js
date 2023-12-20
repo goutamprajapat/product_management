@@ -1,11 +1,13 @@
 const express = require("express");
+require("dotenv").config();
+const morgan = require("morgan");
+morgan("tiny");
 require("pug");
 const app = express();
-const mongoose = require("mongoose");
+const { mongoose } = require("mongoose");
 const basicRouter = require("./router/BasicRouter");
 const session = require("express-session");
-const URI = "mongodb://127.0.0.1:27017/project_mang";
-const port = 3031;
+
 // to access json data call
 app.use(express.json());
 // encode another formate data
@@ -28,12 +30,12 @@ app.use("/", basicRouter);
 
 // connect mongodb to server
 mongoose
-  .connect(URI)
+  .connect(process.env.URL)
   .then(() => {
     console.log("sucessfully conndect to db");
     // listion server on port 3031
-    app.listen(port, () =>
-      console.log(` app listening on port http://localhost:${port}`)
+    app.listen(process.env.PORT, () =>
+      console.log(` app listening on port http://localhost:${process.env.PORT}`)
     );
   })
-  .catch((err) => err.exit(1));
+  .catch((err) => console.log("server Down"));
