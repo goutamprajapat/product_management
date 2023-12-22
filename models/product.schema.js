@@ -7,6 +7,7 @@ const userschema = new Schema({
   price: { type: Number },
   mfgDate: { type: String },
   id: { type: mongoose.Schema.Types.ObjectId },
+  images: { type: String },
 });
 
 const productModel = model("product", userschema, "products");

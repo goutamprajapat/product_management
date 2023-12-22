@@ -1,8 +1,6 @@
 const authControler = require("../controller/AuthController");
-const multer = require("multer");
-const mult = multer();
 const basicRouter = require("express").Router();
-
+const { uploadFile } = require("../middleware/product.Middleware");
 // add a route to the application
 basicRouter.route("/").get(authControler.home);
 basicRouter.route("/register").get(authControler.register);
@@ -14,8 +12,9 @@ basicRouter.route("/logout").get(authControler.logoutUser);
 
 basicRouter
   .route("/api/saveNewproduct")
-  .post(mult.none(), authControler.saveNewProduct);
+  .post(uploadFile.single("pic"), authControler.saveNewProduct);
 
 basicRouter.route("/api/getProduct").get(authControler.getProduct);
+basicRouter.route("/api/getProduct/:id").put(authControler.updateProduct);
 basicRouter.route("/api/getProduct/:id").delete(authControler.removeProduct);
 module.exports = basicRouter;

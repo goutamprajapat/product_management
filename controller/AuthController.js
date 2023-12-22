@@ -71,6 +71,7 @@ const AuthControler = {
         } else {
           req.session.message = "Registration Failed Please Try Again";
           req.session.newUser = { ...data };
+          rs;
           res.redirect("/register");
         }
       }
@@ -106,7 +107,8 @@ const AuthControler = {
   },
   // ! save new product
   async saveNewProduct(req, res) {
-    let { name, Qty, price, mfgDate, id } = req.body;
+    let { name, Qty, price, mfgDate, id, pic } = req.body;
+
     try {
       const product = await productModel({
         name,
@@ -114,11 +116,16 @@ const AuthControler = {
         price,
         mfgDate,
         id,
+        images: req.file.filename,
       });
 
       const productSucess = await product.save();
       if (productSucess) {
-        res.send({ status: true, message: "product sucessfull add" });
+        res.send({
+          status: true,
+          message: "product sucessfull add",
+          files: req.file,
+        });
       } else {
         res.send({ status: true, message: "product failed to  add" });
       }
@@ -145,6 +152,23 @@ const AuthControler = {
     }
   },
 
+  // ! update products
+
+  async updateProduct(req, res) {
+    const { id } = req.params;
+    console.log(req.body);
+    try {
+      const productUpdate = await productModel.findByIdAndUpdate(id);
+      res.send({ data: product, upadate: productUpdate });
+      if (productUpdate) {
+        res.send({ status: true, message: "product sucessfull Update" });
+      } else {
+        res.send({ status: true, message: "product failed to  Update" });
+      }
+    } catch (error) {
+      error.message = "backend error";
+    }
+  },
   // ! remove product using id
   async removeProduct(req, res) {
     const { id } = req.params;

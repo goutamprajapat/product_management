@@ -1,23 +1,57 @@
 window.addEventListener("load", function () {
   // store data in list
   let list = [];
+
+  const imgpreview = document.getElementById("imgpreview");
+  let imageFile = document.querySelector("#pic");
+
+  imageFile.addEventListener("change", () => {
+    if (imageFile.files[0] !== undefined) {
+      let ext = imageFile.files[0].name.substring(
+        imageFile.files[0].name.lastIndexOf(".") + 1
+      );
+      if (ext === "png" || ext === "jpg" || ext === "jpeg") {
+        const reader = new FileReader();
+        reader.onload = () => {
+          imgpreview.src = reader.result;
+        };
+        reader.readAsDataURL(imageFile.files[0]);
+      } else {
+        alert("File must of type JPG/JPEG/PNG");
+        imageFile.value = "";
+        document.getElementById("imgpreview").src =
+          "https://t4.ftcdn.net/jpg/04/81/13/43/360_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg";
+      }
+    }
+  });
+
   const SaveProduct = document.querySelector("#saveNewProduct");
+
   SaveProduct.addEventListener("click", async function () {
-    let neWProduct = {
-      name: document.querySelector("#ProductName").value,
-      Qty: document.querySelector("#productOuantity").value,
-      price: document.querySelector("#ProductPrice").value,
-      mfgDate: document.querySelector("#ProductDate").value,
-      id: id,
-    };
     try {
+      const productFile = document.querySelector("#pic");
+
+      let file = productFile.files[0];
+      if (file === undefined) {
+        alert("please select a file");
+        return false;
+      }
+      // formData
+      const fromData = new FormData();
+
+      fromData.append("name", document.querySelector("#ProductName").value);
+      fromData.append("Qty", document.querySelector("#productOuantity").value);
+      fromData.append("price", document.querySelector("#ProductPrice").value);
+      fromData.append("mfgDate", document.querySelector("#ProductDate").value);
+      fromData.append("id", id);
+      fromData.append("pic", file);
       const Options = {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          // "Content-Type": "application/json",
           // 'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify(neWProduct),
+        body: fromData,
       };
       const URL = "http://localhost:3031/api/saveNewproduct";
       const res = await fetch(URL, Options);
@@ -27,10 +61,13 @@ window.addEventListener("load", function () {
           data.message + " do you want to add new product"
         );
         if (isAddNew) {
+          document.getElementById("imgpreview").src =
+            "https://t4.ftcdn.net/jpg/04/81/13/43/360_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg";
           document.querySelector("#ProductName").value =
             document.querySelector("#productOuantity").value =
             document.querySelector("#ProductPrice").value =
             document.querySelector("#ProductDate").value =
+            document.querySelector("#pic").value =
               "";
         } else {
           window.location.reload();
@@ -72,7 +109,9 @@ window.addEventListener("load", function () {
       .map((product, index) => {
         return `<tr>
       <th scope="row">${index + 1}</th>
+      <th><img src="../images/${product.images}" width='30' alt="img" /></th>
       <td>${product.name}</td>
+
       <td>${product.Qty}</td>
       <td>${product.price}</td>
       <td>
@@ -80,13 +119,56 @@ window.addEventListener("load", function () {
         <button data-remove-id="${
           product._id
         }" class="removebtn btn btn-danger"><i class="bi bi-trash3"></i></button>
-        <button class="editBtn btn btn-danger"><i class="bi bi-pencil-square"></i></button>
+        <button data-update-id="${product._id} "data-bs-toggle="modal",
+        data-bs-target="#getnewProductModal"
+        class="modle editBtn btn btn-danger"><i class="bi bi-pencil-square"></i></button>
         </div>
       </td>
       </tr>
       `;
       })
       .join("");
+
+    // ! working on update product data
+    // const UpdateProduct = document.querySelectorAll(".editBtn");
+    // UpdateProduct.forEach((button) => {
+    //   button.addEventListener("click", () => {
+    //     const { updateId } = button.dataset;
+    //     updateProductId(updateId);
+    //   });
+    // });
+
+    // async function updateProductId(id) {
+    //   const URL = `http://localhost:3031/api/getProduct/${id}`;
+
+    //   const datap = list.forEach((product) => {
+    //     let productUpdate = {
+    //       name: (document.querySelector("#ProductName").value = product.name),
+    //       Qty: (document.querySelector("#productOuantity").value = product.Qty),
+    //       price: (document.querySelector("#ProductPrice").value =
+    //         product.price),
+    //       mfgDate: (document.querySelector("#ProductDate").value =
+    //         product.mfgDate),
+    //       images: (document.querySelector("#pic").src = product.images),
+    //     };
+    //     return productUpdate;
+    //   });
+    //   console.log(datap);
+    //   return false;
+    //   const data = await fetch(URL, {
+    //     method: "PUT",
+    //     body: JSON.stringify(datap),
+    //   });
+
+    //   const respons = await data.json();
+
+    //   if (respons.status === true) {
+    //     alert(respons.message);
+    //     getAllData();
+    //   } else {
+    //     console.log(error.message);
+    //   }
+    // }
 
     // ! remove data using button
     const removebtn = document.querySelectorAll(".removebtn");

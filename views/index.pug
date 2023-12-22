@@ -15,23 +15,28 @@
 body
     include Navbar.pug
        .modal.fade#getnewProductModal(tabindex="-1", aria-labelledby="getnewProductModal", aria-hidden="true",data-bs-backdrop="static" data-bs-keyboard="false")
-        .modal-dialog
+        .modal-dialog.modal-lg
           .modal-content
             .modal-header
               h1.modal-title.fs-5#exampleModalLabel Add Product
               button.btn-close(type="button", data-bs-dismiss="modal", aria-label="Close")
-            .modal-body
-                .mb-3
-                  input.form-control#ProductName(type="text", aria-describedby="emailHelp" placeholder="Product Name" )
-                .mb-3
-                  input.form-control#productOuantity(type="text" placeholder="Ouantity")
-                .mb-3
-                  input.form-control#ProductPrice(type="text", aria-describedby="emailHelp" placeholder="price" )
-                .mb-3
-                  input.form-control#ProductDate(type="date" )
-                .modal-footer.d-flex.justify-content-center.gap-2
-                  button.btn.btn-primary#saveNewProduct Add
-                  button.btn.btn-outline-danger(type="reset") Reset
+            .row
+              .modal-body.col-6
+                  .mb-3
+                    input.form-control#ProductName(type="text", aria-describedby="emailHelp" placeholder="Product Name" )
+                  .mb-3
+                    input.form-control#productOuantity(type="text" placeholder="Ouantity")
+                  .mb-3
+                    input.form-control#ProductPrice(type="text", aria-describedby="emailHelp" placeholder="price" )
+                  .mb-3
+                    input.form-control#ProductDate(type="date" )
+                  .mb-3 
+                    input.form-control#pic(type="file", name="Pic")
+                  .modal-footer.d-flex.justify-content-center.gap-2
+                    button.btn.btn-primary#saveNewProduct Add
+                    button.btn.btn-outline-danger(type="reset") Reset
+              .modal-body.col-4.d-flex.align-items-center
+                img.border#imgpreview(src="https://t4.ftcdn.net/jpg/04/81/13/43/360_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg", width='150' height="150" alt="img")
    
     div.bgimage
     main(style=" backdrop-filter: blur(9px)").container.g-0
@@ -42,6 +47,7 @@ body
           thead
               tr
               th(scope="col") Sr. NO
+              th(scope='col') Image
               th(scope="col") Product Name
               th(scope="col") Qty
               th(scope="col") Price
