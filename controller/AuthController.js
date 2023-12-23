@@ -1,5 +1,6 @@
 const { response } = require("express");
 const Users = require("../models/auth.schema");
+const fs = require("fs");
 const productModel = require("../models/product.schema");
 require("express-session");
 const AuthControler = {
@@ -151,17 +152,47 @@ const AuthControler = {
       error.message = "server error ,try again";
     }
   },
+  // ! get Single product
+  async getSingleProduct(req, res) {
+    try {
+      const { id } = req.params;
 
+      if (req.session.login !== undefined) {
+        const singleProduct = await productModel.find({
+          _id: id,
+        });
+        res.send({ status: true, result: singleProduct });
+      } else {
+        response.status(401).json({
+          status: false,
+          message: "Sessiion is expire re-login again",
+        });
+      }
+    } catch (error) {
+      error.message = "server error ,try again";
+    }
+  },
   // ! update products
 
   async updateProduct(req, res) {
     const { id } = req.params;
-    console.log(req.body);
+
+    let { name, Qty, price, mfgDate, pic } = req.body;
     try {
-      const productUpdate = await productModel.findByIdAndUpdate(id);
-      res.send({ data: product, upadate: productUpdate });
+      const productUpdate = await productModel.findByIdAndUpdate(
+        { _id: id },
+        {
+          $set: { name, Qty, price, mfgDate },
+        },
+        {
+          new: true,
+        }
+      );
       if (productUpdate) {
-        res.send({ status: true, message: "product sucessfull Update" });
+        res.send({
+          status: true,
+          message: "product sucessfull Update",
+        });
       } else {
         res.send({ status: true, message: "product failed to  Update" });
       }
@@ -174,8 +205,12 @@ const AuthControler = {
     const { id } = req.params;
     try {
       const product = await productModel.findByIdAndDelete(id);
+
       if (product) {
-        res.send({ status: true, message: "product sucessfull Delete" });
+        fs.unlink("./public/images/" + product.images, (err) => {
+          if (err) throw err;
+        });
+        res.send({ status: true, message: "product successfull to  Delete" });
       } else {
         res.send({ status: true, message: "product failed to  Delete" });
       }

@@ -45,6 +45,7 @@ window.addEventListener("load", function () {
       fromData.append("mfgDate", document.querySelector("#ProductDate").value);
       fromData.append("id", id);
       fromData.append("pic", file);
+
       const Options = {
         method: "POST",
         headers: {
@@ -119,8 +120,8 @@ window.addEventListener("load", function () {
         <button data-remove-id="${
           product._id
         }" class="removebtn btn btn-danger"><i class="bi bi-trash3"></i></button>
-        <button data-update-id="${product._id} "data-bs-toggle="modal",
-        data-bs-target="#getnewProductModal"
+        <button data-update-id="${product._id}"data-bs-toggle="modal",
+        data-bs-target="#updateProduct"
         class="modle editBtn btn btn-danger"><i class="bi bi-pencil-square"></i></button>
         </div>
       </td>
@@ -130,45 +131,73 @@ window.addEventListener("load", function () {
       .join("");
 
     // ! working on update product data
-    // const UpdateProduct = document.querySelectorAll(".editBtn");
-    // UpdateProduct.forEach((button) => {
-    //   button.addEventListener("click", () => {
-    //     const { updateId } = button.dataset;
-    //     updateProductId(updateId);
-    //   });
-    // });
+    const getProductUpdateId = document.querySelectorAll(".editBtn");
+    const UpdateProduct = document.querySelector("#UpdateNewProduct");
 
-    // async function updateProductId(id) {
-    //   const URL = `http://localhost:3031/api/getProduct/${id}`;
+    getProductUpdateId.forEach((button) => {
+      button.addEventListener("click", () => {
+        var { updateId } = button.dataset;
 
-    //   const datap = list.forEach((product) => {
-    //     let productUpdate = {
-    //       name: (document.querySelector("#ProductName").value = product.name),
-    //       Qty: (document.querySelector("#productOuantity").value = product.Qty),
-    //       price: (document.querySelector("#ProductPrice").value =
-    //         product.price),
-    //       mfgDate: (document.querySelector("#ProductDate").value =
-    //         product.mfgDate),
-    //       images: (document.querySelector("#pic").src = product.images),
-    //     };
-    //     return productUpdate;
-    //   });
-    //   console.log(datap);
-    //   return false;
-    //   const data = await fetch(URL, {
-    //     method: "PUT",
-    //     body: JSON.stringify(datap),
-    //   });
+        getSingleProductId(updateId);
+      });
+    });
 
-    //   const respons = await data.json();
+    UpdateProduct.addEventListener("click", () => {
+      fetproduct(updateIdData);
+    });
 
-    //   if (respons.status === true) {
-    //     alert(respons.message);
-    //     getAllData();
-    //   } else {
-    //     console.log(error.message);
-    //   }
-    // }
+    // const data = {
+
+    async function getSingleProductId(id) {
+      const URL = `http://localhost:3031/api/getProduct/${id}`;
+      const data = await fetch(URL, {
+        method: "GET",
+      });
+      const respons = await data.json();
+      let product = respons.result[0];
+      (document.querySelector("#updateProductName").value = product.name),
+        (document.querySelector("#updateproductOuantity").value = product.Qty),
+        (document.querySelector("#updateProductPrice").value = product.price),
+        (document.querySelector("#updateProductDate").value = product.mfgDate),
+        (document.querySelector("#updatepic").src = product.images);
+      let d = product.id;
+      console.log(d);
+    }
+
+    async function fetproduct() {
+      let name = document.querySelector("#updateProductName").value;
+      let Qty = document.querySelector("#updateproductOuantity").value;
+      let price = document.querySelector("#updateProductPrice").value;
+      let mfgDate = document.querySelector("#updateProductDate").value;
+
+      console.log("value " + name, Qty, price, mfgDate);
+      // fromData.append("id", id);
+      // fromData.append("pic", file);
+      const URL = `http://localhost:3031/api/getProduct/${id}`;
+      let updateData = {
+        name,
+        Qty,
+        price,
+        mfgDate,
+      };
+      const data = await fetch(URL, {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+          // "Content-Type": "multipart/form-data",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      const respons = await data.json();
+      if (!respons.status === true) {
+        console.log("respons " + respons);
+        console.log("sucessfully fetch data");
+      } else {
+        console.log("unable fetch data");
+      }
+    }
 
     // ! remove data using button
     const removebtn = document.querySelectorAll(".removebtn");

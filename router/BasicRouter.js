@@ -15,6 +15,7 @@ basicRouter
   .post(uploadFile.single("pic"), authControler.saveNewProduct);
 
 basicRouter.route("/api/getProduct").get(authControler.getProduct);
+basicRouter.route("/api/getProduct/:id").get(authControler.getSingleProduct);
 basicRouter.route("/api/getProduct/:id").put(authControler.updateProduct);
 basicRouter.route("/api/getProduct/:id").delete(authControler.removeProduct);
 module.exports = basicRouter;
