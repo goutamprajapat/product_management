@@ -137,13 +137,8 @@ window.addEventListener("load", function () {
     getProductUpdateId.forEach((button) => {
       button.addEventListener("click", () => {
         var { updateId } = button.dataset;
-
         getSingleProductId(updateId);
       });
-    });
-
-    UpdateProduct.addEventListener("click", () => {
-      fetproduct(updateIdData);
     });
 
     // const data = {
@@ -160,11 +155,14 @@ window.addEventListener("load", function () {
         (document.querySelector("#updateProductPrice").value = product.price),
         (document.querySelector("#updateProductDate").value = product.mfgDate),
         (document.querySelector("#updatepic").src = product.images);
-      let d = product.id;
-      console.log(d);
+      var userId = product.id;
+      UpdateProduct.addEventListener("click", () => {
+        fetchproduct(userId);
+        console.log(userId);
+      });
     }
 
-    async function fetproduct() {
+    async function fetchproduct(id) {
       let name = document.querySelector("#updateProductName").value;
       let Qty = document.querySelector("#updateproductOuantity").value;
       let price = document.querySelector("#updateProductPrice").value;
@@ -194,6 +192,7 @@ window.addEventListener("load", function () {
       if (!respons.status === true) {
         console.log("respons " + respons);
         console.log("sucessfully fetch data");
+        getAllData();
       } else {
         console.log("unable fetch data");
       }
