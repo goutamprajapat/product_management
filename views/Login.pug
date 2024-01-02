@@ -8,9 +8,10 @@
             title login
             link(rel="stylesheet", type='text/css' href="css/style.css")
 body
+div.bgimage 
 .container
     .section(style='height:91vh').container-lg.position-relative
-        div.shadow-sm.row.d-flex.align-items-center.justify-content-center.bg-primary.bg-opacity-50.position-absolute.top-50.translate-middle-y.w-100.p-4.rounded-3
+        div.shadow-sm.row.d-flex.align-items-center.justify-content-center.bg-primary.position-absolute.top-50.translate-middle-y.w-100.p-4.rounded-3
             if(message !== "")
               #messageAlert
                 .alert.alert-danger(role="alert") #{message}

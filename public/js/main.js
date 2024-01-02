@@ -148,17 +148,39 @@ window.addEventListener("load", function () {
       const data = await fetch(URL, {
         method: "GET",
       });
+      var getid = id;
+
       const respons = await data.json();
       let product = respons.result[0];
       (document.querySelector("#updateProductName").value = product.name),
         (document.querySelector("#updateproductOuantity").value = product.Qty),
         (document.querySelector("#updateProductPrice").value = product.price),
-        (document.querySelector("#updateProductDate").value = product.mfgDate),
-        (document.querySelector("#updatepic").src = product.images);
-      var userId = product.id;
+        (document.querySelector("#updateProductDate").value = product.mfgDate);
+      // console.log(userId);
+      const img = document.querySelector("#updatepic");
+      const imgpreview = document.querySelector("#imgpreviewupdate");
+      img.addEventListener("change", () => {
+        if (img.files[0] !== undefined) {
+          let ext = img.files[0].name.substring(
+            img.files[0].name.lastIndexOf(".") + 1
+          );
+          if (ext === "png" || ext === "jpg" || ext === "jpeg") {
+            const reader = new FileReader();
+            reader.onload = () => {
+              imgpreview.src = reader.result;
+            };
+            reader.readAsDataURL(img.files[0]);
+          } else {
+            alert("File must of type JPG/JPEG/PNG");
+            img.value = "";
+            document.getElementById("imgpreviewupdate").src =
+              "https://t4.ftcdn.net/jpg/04/81/13/43/360_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg";
+          }
+        }
+      });
       UpdateProduct.addEventListener("click", () => {
-        fetchproduct(userId);
-        console.log(userId);
+        fetchproduct(getid);
+        // console.log(userId);
       });
     }
 
@@ -168,31 +190,39 @@ window.addEventListener("load", function () {
       let price = document.querySelector("#updateProductPrice").value;
       let mfgDate = document.querySelector("#updateProductDate").value;
 
-      console.log("value " + name, Qty, price, mfgDate);
       // fromData.append("id", id);
       // fromData.append("pic", file);
+      const productFile = document.querySelector("#updatepic");
+      console.log(productFile.files[0]);
+      let file = productFile.files[0].name;
+      if (file === undefined) {
+        alert("please select a file");
+        return false;
+      }
+
+      console.log("value " + name, Qty, price, mfgDate, file);
       const URL = `http://localhost:3031/api/getProduct/${id}`;
       let updateData = {
         name,
         Qty,
         price,
         mfgDate,
+        pic: file,
       };
       const data = await fetch(URL, {
         method: "put",
         headers: {
-          "Content-Type": "application/json",
-          // "Content-Type": "multipart/form-data",
+          // "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
           // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: JSON.stringify(updateData),
       });
 
       const respons = await data.json();
-      if (!respons.status === true) {
-        console.log("respons " + respons);
+      if (respons.status === true) {
         console.log("sucessfully fetch data");
-        getAllData();
+        window.location.reload();
       } else {
         console.log("unable fetch data");
       }

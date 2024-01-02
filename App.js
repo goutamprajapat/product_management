@@ -12,7 +12,13 @@ const session = require("express-session");
 app.use(express.json());
 // encode another formate data
 app.use(express.urlencoded({ extended: false }));
-
+app.use(function (req, res, next) {
+  res.set(
+    "Cache-Control",
+    "no-cache,private,no-store,must-revalidate,max-stale=0,post-check=0,pre-check=0"
+  );
+  next();
+});
 // set template engine defaults
 app.set("views", "./views");
 app.set("view engine", "pug");

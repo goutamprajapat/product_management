@@ -1,6 +1,7 @@
 const { response } = require("express");
 const Users = require("../models/auth.schema");
 const fs = require("fs");
+const jwt = require("jsonwebtoken");
 const productModel = require("../models/product.schema");
 require("express-session");
 const AuthControler = {
@@ -107,6 +108,39 @@ const AuthControler = {
     }
   },
   // ! save new product
+  // login user with password
+  async loginApiUser(req, res) {
+    try {
+      let data = req.body;
+      let user = await Users.findOne(
+        {
+          email: { $regex: `^${data.email}$`, $options: "i" },
+          password: data.password,
+        },
+        { password: 0 }
+      );
+      const token = jwt.sign({ user }, process.env.TOKEN_SECRET_KEY, {
+        expiresIn: "1h",
+      });
+
+      const tokenverify = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
+      if (user) {
+        res.json({ status: true, Token: token, verifytoken: tokenverify });
+        // req.session.login = { user };
+        // res.redirect("/");
+      } else {
+        res.json({
+          status: false,
+          message: "enter vaild username or vaid password",
+        });
+        // res.redirect("/login");
+      }
+    } catch (error) {
+      req.session.message = "backend error";
+      // res.redirect("/login");
+    }
+  },
+  // ! save new product
   async saveNewProduct(req, res) {
     let { name, Qty, price, mfgDate, id, pic } = req.body;
 
@@ -176,26 +210,42 @@ const AuthControler = {
 
   async updateProduct(req, res) {
     const { id } = req.params;
+    let { name, Qty, price, mfgDate } = req.body;
 
-    let { name, Qty, price, mfgDate, pic } = req.body;
     try {
-      const productUpdate = await productModel.findByIdAndUpdate(
-        { _id: id },
-        {
-          $set: { name, Qty, price, mfgDate },
-        },
-        {
-          new: true,
+      const singleProduct = await productModel.findById({
+        _id: id,
+      });
+      // console.log(singleProduct);
+      console.log(req.file.filename);
+      // if (req.file.filename === null) {
+      //   console.log("not empty");
+      // } else {
+      //   console.log("empty");
+      // }
+      // fs.unlink("./public/images/" + singleProduct.images, (err) => {
+      //   if (err) throw err;
+      // });
+      if (singleProduct) {
+        const productUpdate = await productModel.findByIdAndUpdate(
+          { _id: id },
+          {
+            $set: { name, Qty, price, mfgDate },
+          },
+          {
+            new: true,
+          }
+        );
+        if (productUpdate) {
+          res.send({
+            status: true,
+            message: "product sucessfull Update",
+          });
+        } else {
+          res.send({ status: true, message: "product failed to  Update" });
         }
-      );
-      if (productUpdate) {
-        res.send({
-          status: true,
-          message: "product sucessfull Update",
-        });
-      } else {
-        res.send({ status: true, message: "product failed to  Update" });
       }
+      console.log("val delet fs ", val);
     } catch (error) {
       error.message = "backend error";
     }

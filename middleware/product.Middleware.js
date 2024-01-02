@@ -19,7 +19,6 @@ const storage = multer.diskStorage({
     cb(null, filename);
   },
 });
-
 const uploadFile = multer({ storage: storage });
 const noUpload = multer().none;
 module.exports = { noUpload, uploadFile };
