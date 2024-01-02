@@ -19,6 +19,7 @@ app.use(function (req, res, next) {
   );
   next();
 });
+
 // set template engine defaults
 app.set("views", "./views");
 app.set("view engine", "pug");
@@ -33,7 +34,11 @@ app.use(
   })
 );
 app.use("/", basicRouter);
-
+app.use(function (req, res, next) {
+  res.status(404).render("404", {
+    title: "Page Not Found",
+  });
+});
 // connect mongodb to server
 mongoose
   .connect(process.env.URL)

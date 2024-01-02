@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const productModel = require("../models/product.schema");
 require("express-session");
 const AuthControler = {
+ 
+
   async home(req, res) {
     if (req.session.login === undefined) {
       res.redirect("/login");
@@ -28,7 +30,7 @@ const AuthControler = {
   },
   logoutUser(req, res) {
     delete req.session.login;
-    res.redirect("/login");
+    res.redirect("login");
   },
   // login path
   login(req, res) {

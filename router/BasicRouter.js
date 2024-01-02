@@ -9,9 +9,9 @@ basicRouter.route("/register-user").post(authControler.saveRegister);
 
 basicRouter.route("/login").get(authControler.login);
 basicRouter.route("/login-user").post(authControler.loginUser);
-basicRouter
-  .route("/api-login-user")
-  .post(schemaAuthValidate, authControler.loginApiUser);
+// basicRouter
+//   .route("/api-login-user")
+//   .post(schemaAuthValidate, authControler.loginApiUser);
 
 basicRouter.route("/logout").get(authControler.logoutUser);
 
