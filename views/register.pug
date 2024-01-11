@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+    html(lang ='en')
+      head  
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width,initial-scale=1")
+        link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN", crossorigin="anonymous")
+        script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js", integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL", crossorigin="anonymous")
+        title Register
+        link(rel="stylesheet", type='text/css' href="css/style.css")
+        script(src="./javascript/main.js")
+body
+div.bgimage
+.section.container.p-4
+  .shadow-sm.row.bg-primary.p-4
+      .main.col-lg-5.col-12.p-4.rounded-2.text-bg-light.shadow
+          if(message !== "")
+            #messageAlert
+              .alert.alert-danger(role="alert") #{message}
+            script.
+              let message = "#{message}"
+                if(message !== ""){ 
+                  setTimeout(()=>{
+                      document.querySelector("#messageAlert").innerHTML = "";
+                    },2000)
+                  }
+          .title.mb-4.text-center 
+              span.h2 Register                  
+          form(action="/register-user" method="post")
+              .mb-4
+                  div.row
+                      label.col.form-label(for="name") Name
+                          input.form-control#name.mb-2(type="text" name='name' required value=newUser.name )
+                          label.form-label(for="email") Email
+                          input.form-control#email.mb-2(type="email" name="email" value=newUser.email required)
+                          label.form-label(for="exampleInputPassword1") Password
+                          input.form-control#exampleInputPassword1.mb-2(type="password" name="password" required,autoComplete='false' value=newUser.password )
+                          label.form-label(for="cpassword") Conform Password
+                          input.form-control#cpassword.mb-2(type="password" ,name='cpassword', required,autoComplete='false' value=newUser.cpassword )
+                          label.form-label(for="phone") Phone Number
+                          input.form-control#phone.mb-2(type="text" name="phone" required  value=newUser.phone)
+              button.btn.w-100.btn-success(type="submit") Register
+              a(href="/login").text-end.nav-link  You Are Old User ? 
+                  span.text-primary login Now
+      div.images.col-lg-6.col-12.d-none.d-lg-flex.justify-content-center.align-item-center
+          img(src="https://cdni.iconscout.com/illustration/premium/thumb/sign-up-3391266-2937870.png", width="90%" alt="login image" )
+
+
+
+
+
+
+
+
+
+
